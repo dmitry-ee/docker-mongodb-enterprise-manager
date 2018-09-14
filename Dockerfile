@@ -5,10 +5,20 @@ ARG MONGO_ENTERPRISE_MANAGER_USER=mongodb-mms
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN 				groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
 
+ENV 				GOSU_VERSION 1.7
 RUN 				set -x \
 						&& apt-get update \
 						&& apt-get install -y --no-install-recommends \
 							ca-certificates wget bash openssl supervisor \
+						&& rm -rf /var/lib/apt/lists/* \
+						&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
+						&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
+						&& export GNUPGHOME="$(mktemp -d)" \
+						&& gpg --keyserver ha.pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+						&& gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
+						&& rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc \
+						&& chmod +x /usr/local/bin/gosu \
+						&& gosu nobody true
 						&& rm -rf /var/lib/apt/lists/*
 
 # MONGO_ENTERPRISE_MANAGER_BUILD could be obtained from https://www.mongodb.com/download-center/ops-manager/releases
