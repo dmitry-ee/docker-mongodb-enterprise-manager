@@ -1,9 +1,10 @@
 FROM debian:jessie
 
-ARG MONGO_ENTERPRISE_MANAGER_USER			mongoopsmanager
+ARG MONGO_ENTERPRISE_MANAGER_USER=mongoopsmanager
+ARG MONGO_ENTERPRISE_MANAGER_CONF_DIR=/etc/mongodb-ops-manager
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN 				groupadd -g 1999 -r $MONGO_ENTERPRISE_MANAGER_USER && useradd  -u 1999 -r -g $MONGO_ENTERPRISE_MANAGER_USER $MONGO_ENTERPRISE_MANAGER_USER
+RUN 				groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
 
 RUN 				apt-get update \
 							&& apt-get install -y --no-install-recommends \
@@ -37,13 +38,13 @@ RUN 				cd /tmp \
 							&& wget https://downloads.mongodb.com/on-prem-mms/deb/mongodb-mms_${MONGO_ENTERPRISE_MANAGER_BUILD}_x86_64.deb \
 								--no-check-certificate \
 								-O mongodb-mms-package.deb \
-							&& dpkg -i mongodb-mms-package.deb
-							#&& apt-get purge -y --auto-remove ca-certificates wget
+							&& dpkg -i mongodb-mms-package.deb \
+							&& apt-get purge -y --auto-remove ca-certificates wget
 
-RUN 				mkdir -p /etc/ops-manager/ \
-							&& chown -R $MONGO_ENTERPRISE_MANAGER_USER:$MONGO_ENTERPRISE_MANAGER_USER /etc/ops-manager/
+RUN 				mkdir -p ${MONGO_ENTERPRISE_MANAGER_CONF_DIR} \
+							&& chown -R ${MONGO_ENTERPRISE_MANAGER_USER}:${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_CONF_DIR}
 
-VOLUME			/etc/ops-manager/
+VOLUME			${MONGO_ENTERPRISE_MANAGER_CONF_DIR}
 
 LABEL 			description="MongoDB Enterprise OpsManager (non-official) image with fixed uid for user(1999)"
 
@@ -53,4 +54,4 @@ ENTRYPOINT 	["/entrypoint.sh"]
 
 EXPOSE 			8080
 
-ENTRYPOINT 	[ "bash" ]
+ENTRYPOINT 	[ "ops-manager" ]
