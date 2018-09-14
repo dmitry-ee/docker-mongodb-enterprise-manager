@@ -1,3 +1,5 @@
+def image_base_name = "mongodb-enterprise-manager"
+
 ext {
   imagePrefix = project.properties['imagePrefix'] ?: "docker.moscow.alfaintra.net"
 }
@@ -10,7 +12,7 @@ allprojects {
 
 task build() << {
   logger.quiet "build project $project.name"
-  def command = "docker build -t $imagePrefix/mongo-enterprise:${getVersionName()} $project.projectDir.absolutePath"
+  def command = "docker build -t $imagePrefix/${image_base_name}:${getVersionName()} $project.projectDir.absolutePath"
   shellDo(command)
 }
 
@@ -22,14 +24,14 @@ def shellDo(command) {
 
 task push() << {
   logger.quiet "push project $project.name"
-  def command = "docker push $imagePrefix/mongo-enterprise:${getVersionName()}"
+  def command = "docker push $imagePrefix/${image_base_name}:${getVersionName()}"
   shellDo(command)
 }
 
 def getVersionName() {
   def stdout = new ByteArrayOutputStream()
   exec {
-    commandLine 'git', 'describe', '--tags'
+    commandLine "bash", "-c", "git describe --tags | sed \"s/\\([^-]*\\)-.*/\\1/\""
     standardOutput = stdout
   }
   return stdout.toString().trim()
