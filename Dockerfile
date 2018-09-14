@@ -54,6 +54,7 @@ LABEL 			description="MongoDB Enterprise OpsManager (non-official) image with fi
 COPY 				docker-entrypoint.sh /entrypoint.sh
 
 ENTRYPOINT 	["/entrypoint.sh"]
+ENV         PATH=/opt/mongodb/mms/bin/:$PATH
 
 EXPOSE 			8080
 
