@@ -19,7 +19,8 @@ RUN 				set -x \
 ENV MONGO_ENTERPRISE_MANAGER_MAJOR		4.0
 ENV MONGO_ENTERPRISE_MANAGER_VERSION	4.0.2
 ENV MONGO_ENTERPRISE_MANAGER_BUILD		4.0.2.50187.20180905T1427Z-1
-ARG MONGO_ENTERPRISE_MANAGER_CONF_DIR=/opt/mongodb/mms/conf
+ENV MONGO_ENTERPRISE_MANAGER_CONF_DIR=/opt/mongodb/mms/conf
+ENV MONGO_ENTERPRISE_MANAGER_OCONF_DIR=/opt/mongodb/mms/conf-orig
 ARG MONGO_ENTERPRISE_MANAGER_CERT_DIR=/etc/mongodb-mms/
 ARG MONGO_ENTERPRISE_MANAGER_LOG_DIR=/opt/mongodb/mms/log
 # #
@@ -39,7 +40,7 @@ RUN 				mkdir -p \
 							${MONGO_ENTERPRISE_MANAGER_CONF_DIR} \
 							${MONGO_ENTERPRISE_MANAGER_CERT_DIR} \
 							${MONGO_ENTERPRISE_MANAGER_LOG_DIR} \
-						&& cp ${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_CONF_DIR}-orig
+						&& cp ${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_OCONF_DIR}
 
 VOLUME			${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_CERT_DIR} ${MONGO_ENTERPRISE_MANAGER_LOG_DIR}
 
@@ -47,7 +48,6 @@ LABEL 			description="MongoDB Enterprise OpsManager (non-official) image with fi
 
 COPY 				docker-entrypoint.sh 		/entrypoint.sh
 COPY 				config/supervisord.conf /etc/supervisor/conf.d/ops-manager.conf
-COPY
 
 ENTRYPOINT 	[ "/entrypoint.sh" ]
 ENV         PATH=/opt/mongodb/mms/bin/:$PATH
