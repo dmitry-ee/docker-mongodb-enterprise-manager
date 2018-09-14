@@ -15,7 +15,7 @@ ENV 				GOSU_VERSION 1.7
 RUN 				set -x \
 							&& apt-get update
 							&& apt-get install -y --no-install-recommends \
-								ca-certificates wget bash openssl
+								ca-certificates wget bash openssl \
 							&& rm -rf /var/lib/apt/lists/* \
 							&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 							&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
