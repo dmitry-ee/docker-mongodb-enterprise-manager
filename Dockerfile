@@ -13,7 +13,7 @@ RUN 				apt-get update \
 # grab gosu for easy step-down from root
 ENV 				GOSU_VERSION 1.7
 RUN 				set -x \
-							&& apt-get update
+							&& apt-get update \
 							&& apt-get install -y --no-install-recommends \
 								ca-certificates wget bash openssl \
 							&& rm -rf /var/lib/apt/lists/* \
