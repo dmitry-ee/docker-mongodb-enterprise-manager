@@ -1,7 +1,6 @@
 FROM debian:jessie
 
 ARG MONGO_ENTERPRISE_MANAGER_USER=mongoopsmanager
-ARG MONGO_ENTERPRISE_MANAGER_CONF_DIR=/etc/mongodb-ops-manager
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN 				groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
@@ -14,7 +13,10 @@ RUN 				apt-get update \
 # grab gosu for easy step-down from root
 ENV 				GOSU_VERSION 1.7
 RUN 				set -x \
-							&& apt-get update && apt-get install -y --no-install-recommends ca-certificates wget bash && rm -rf /var/lib/apt/lists/* \
+							&& apt-get update
+							&& apt-get install -y --no-install-recommends \
+								ca-certificates wget bash openssl
+							&& rm -rf /var/lib/apt/lists/* \
 							&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 							&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
 							&& export GNUPGHOME="$(mktemp -d)" \
@@ -32,6 +34,7 @@ RUN 				set -x \
 ENV MONGO_ENTERPRISE_MANAGER_MAJOR		4.0
 ENV MONGO_ENTERPRISE_MANAGER_VERSION	4.0.2
 ENV MONGO_ENTERPRISE_MANAGER_BUILD		4.0.2.50187.20180905T1427Z-1
+ARG MONGO_ENTERPRISE_MANAGER_CONF_DIR=/etc/mongodb-mms
 # #
 
 RUN 				cd /tmp \
