@@ -54,4 +54,4 @@ ENTRYPOINT 	["/entrypoint.sh"]
 
 EXPOSE 			8080
 
-ENTRYPOINT 	[ "ops-manager" ]
+CMD 				[ "ops-manager" ]
