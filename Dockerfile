@@ -15,7 +15,7 @@ ENV 				GOSU_VERSION 1.7
 RUN 				set -x \
 						&& apt-get update \
 						&& apt-get install -y --no-install-recommends \
-							ca-certificates wget bash openssl \
+							ca-certificates wget bash openssl supervisor \
 						&& rm -rf /var/lib/apt/lists/* \
 						&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
 						&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
@@ -56,11 +56,12 @@ VOLUME			${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_CERT_DI
 
 LABEL 			description="MongoDB Enterprise OpsManager (non-official) image with fixed uid for user(1999)"
 
-COPY 				docker-entrypoint.sh /entrypoint.sh
+COPY 				docker-entrypoint.sh 		/entrypoint.sh
+COPY 				config/supervisord.conf /etc/supervisor/conf.d/ops-manager.conf
 
 ENTRYPOINT 	[ "/entrypoint.sh" ]
 ENV         PATH=/opt/mongodb/mms/bin/:$PATH
 
 EXPOSE 			8080
 
-CMD 				[ "mongodb-mms", "start" ]
+CMD 				[ "mongodb-mms" ]
