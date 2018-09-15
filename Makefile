@@ -33,6 +33,8 @@ logs-manager:
 clean:
 	- @docker rm -f ${CONTAINER_NAME}
 full-clean: remove-logs remove-conf clean
+cert-clean:
+	@sudo rm -rf /etc/mongodb-ops-manager/cert
 
 remove-logs:
 	@sudo rm -rf /var/log/${CONTAINER_NAME}
