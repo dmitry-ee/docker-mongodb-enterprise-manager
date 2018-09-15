@@ -1,4 +1,4 @@
-def image_base_name = "mongodb-enterprise-manager"
+def image_base_name = "mongodb-ops-manager"
 
 ext {
   imagePrefix = project.properties['imagePrefix'] ?: "docker.moscow.alfaintra.net"
