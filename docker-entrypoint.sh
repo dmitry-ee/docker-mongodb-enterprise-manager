@@ -2,7 +2,7 @@
 set -e
 
 if [ "$1" = 'mongodb-mms' -a "$(id -u)" = '0' ]; then
-  cp -n $MONGO_ENTERPRISE_MANAGER_OCONF_DIR* $MONGO_ENTERPRISE_MANAGER_CONF_DIR*
+  cp -n -r $MONGO_ENTERPRISE_MANAGER_OCONF_DIR $MONGO_ENTERPRISE_MANAGER_CONF_DIR
   gosu "/usr/bin/supervisord"
   while true; do
     sleep 60
