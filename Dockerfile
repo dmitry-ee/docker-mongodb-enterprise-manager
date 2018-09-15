@@ -1,6 +1,6 @@
 FROM debian:jessie
 
-ARG MONGO_ENTERPRISE_MANAGER_USER=mongodb-mms
+ENV MONGO_ENTERPRISE_MANAGER_USER=mongodb-mms
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN 				groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
