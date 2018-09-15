@@ -31,7 +31,8 @@ RUN 				cd /tmp \
 							--no-check-certificate \
 							-O mongodb-mms-package.deb \
 						&& dpkg -i mongodb-mms-package.deb \
-						&& apt-get purge -y --auto-remove ca-certificates wget
+						&& apt-get purge -y --auto-remove ca-certificates wget \
+						&& rm mongodb-mms-package.deb
 
 RUN 				mkdir -p \
 							${MONGO_ENTERPRISE_MANAGER_CONF_DIR} \
