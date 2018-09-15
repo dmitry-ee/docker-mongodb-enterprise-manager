@@ -1,7 +1,18 @@
 #!/bin/bash
 set -e
 
-if [ "$1" = 'mongodb-mms' -a "$(id -u)" = '0' ]; then
+stop_mongodb_mms()
+{
+    echo "Stopping MongoDB Ops Manager [Daemon]..."
+    /opt/mongodb/mms/bin/mongodb-mms stop
+}
+stop_mongodb_mms_backup()
+{
+    echo "Stopping MongoDB Ops Manager [Backup Daemon]..."
+    /opt/mongodb/mms/bin/mongodb-mms stop
+}
+
+if [ "$1" = 'mongodb-mms' ]; then
 
   chown -R  $MONGO_ENTERPRISE_MANAGER_USER:$MONGO_ENTERPRISE_MANAGER_USER \
             $MONGO_ENTERPRISE_MANAGER_CONF_DIR \
@@ -10,12 +21,26 @@ if [ "$1" = 'mongodb-mms' -a "$(id -u)" = '0' ]; then
 
   cp -n -r  $MONGO_ENTERPRISE_MANAGER_CONF_ORIG_DIR/. $MONGO_ENTERPRISE_MANAGER_CONF_DIR
 
-  gosu $MONGO_ENTERPRISE_MANAGER_USER supervisord
+  trap stop_mongodb_mms HUP INT QUIT KILL TERM
+
+  mongodb-mms start
+  echo "MongoDB Ops Manager [Daemon] is running"
 
   while true; do
-    sleep 60
+    sleep 1000
   done
 
 fi
+
+if [ "$1" = 'backup-daemon' ]; then
+
+  trap stop_mongodb_mms_backup HUP INT QUIT KILL TERM
+
+  mongodb-mms-backup-daemon start
+  echo "MongoDB Ops Manager [Backup Daemon] is running"
+
+fi
+
+
 
 exec "$@"
