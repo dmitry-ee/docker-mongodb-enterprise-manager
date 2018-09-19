@@ -1,4 +1,4 @@
-def image_base_name = "mongodb-ops-manager"
+def image_base_name = "mongo-ops-manager"
 
 ext {
   imagePrefix = project.properties['imagePrefix'] ?: "docker.moscow.alfaintra.net"
@@ -25,6 +25,7 @@ def shellDo(command) {
 task push() << {
   logger.quiet "push project $project.name"
   def command = "docker push $imagePrefix/${image_base_name}:${getVersionName()}"
+  logger.quiet(command)
   shellDo(command)
 }
 

@@ -5,7 +5,6 @@ ENV 		MONGO_ENTERPRISE_MANAGER_USER=mongodb-mms
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
 RUN		groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
 
-ENV 		GOSU_VERSION 1.7
 RUN 		set -x \
 		&& apt-get update \
 		&& apt-get install -y --no-install-recommends \
@@ -32,6 +31,7 @@ RUN 		cd /tmp \
 		-O mongodb-mms-package.deb \
 		&& dpkg -i mongodb-mms-package.deb \
 		&& apt-get purge -y --auto-remove ca-certificates wget \
+		&& rm -rf /opt/mongodb/mms/agent/* \
 		&& rm mongodb-mms-package.deb
 
 RUN 		mkdir -p \
@@ -47,6 +47,15 @@ RUN 		mkdir -p \
 VOLUME		${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_CERT_DIR} ${MONGO_ENTERPRISE_MANAGER_LOG_DIR}
 
 LABEL 		description="MongoDB Enterprise OpsManager (non-official) image with fixed uid for user(1999)"
+LABEL 		maintainer="Dmitry Evdokimov # devdokimoff@gmail.com / devdokimov@alfabank.ru #"
+
+# DEFAULT ENV VARS EXPOSED TO CONTAINER
+# default email address? why not rambler?
+ENV 		MONGO_ENTERPRISE_MANAGER_DB_URI=mongodb://localhost:27017
+ENV 		MONGO_ENTERPRISE_MANAGER_ADMIN_EMAIL=noreply@rambler.ru
+ENV 		MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_URL=http://localhost:8080
+ENV 		MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_BACKUP_URL=http://localhost:8081
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS="-d64 -Xss256k -Xmx2048m -Xms2048m -XX:NewSize=300m -Xmn700m -XX:ReservedCodeCacheSize=64m -XX:-OmitStackTraceInFastThrow -Dxgen.webServerGzipEnabled=true"
 
 COPY 		docker-entrypoint.sh 		/entrypoint.sh
 COPY 		config/supervisord.conf /etc/supervisor/conf.d/ops-manager.conf
@@ -54,6 +63,7 @@ COPY 		config/supervisord.conf /etc/supervisor/conf.d/ops-manager.conf
 ENTRYPOINT 	[ "/entrypoint.sh" ]
 ENV   		 PATH=/opt/mongodb/mms/bin/:$PATH
 
-EXPOSE		8080
+EXPOSE		8080 8081
 
-CMD 		[ "mongodb-mms", "backup-daemon" ]
+#CMD 		[ "mongodb-mms", "backup-daemon" ]
+CMD 		[ "mongodb-mms" ]
