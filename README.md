@@ -1,4 +1,4 @@
-# MongoDB Enterprise Ops Manager image
+# MongoDB Enterprise Ops Manager
 
 User statical uid and guid for ops-manager:
 
