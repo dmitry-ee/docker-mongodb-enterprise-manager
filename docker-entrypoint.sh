@@ -25,6 +25,12 @@ set_config() {
     fi
 }
 
+set_java_opt() {
+  key="$1"
+  value="$2"
+  sed -ri "s/(-$key)[0-9]+./\1$2/i" "$config_tmp"
+}
+
 if [ "$1" = 'mongodb-mms' ]; then
 
   chown -R  $MONGO_ENTERPRISE_MANAGER_USER:$MONGO_ENTERPRISE_MANAGER_USER \
@@ -59,7 +65,13 @@ if [ "$1" = 'mongodb-mms' ]; then
   config_tmp="$(mktemp)"
   cat $MONGO_ENTERPRISE_MANAGER_CONF_DIR/mms.conf > "$config_tmp"
 
-  set_config JAVA_MMS_UI_OPTS "\"$MONGO_ENTERPRISE_MANAGER_JAVA_OPTS\""
+  #set_config JAVA_MMS_UI_OPTS "\"$MONGO_ENTERPRISE_MANAGER_JAVA_OPTS\""
+  set_java_opt xss $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XSS
+  set_java_opt xmx $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMX
+  set_java_opt xms $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMS
+  set_java_opt xx:newsize= $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_NEW_SIZE
+  set_java_opt xmn $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMN
+  set_java_opt XX:ReservedCodeCacheSize= $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_RESERVED_CODE_CACHE
 
   cat "$config_tmp" > $MONGO_ENTERPRISE_MANAGER_CONF_DIR/mms.conf
   rm "$config_tmp"

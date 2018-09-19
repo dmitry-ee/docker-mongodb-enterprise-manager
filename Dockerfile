@@ -55,15 +55,18 @@ ENV 		MONGO_ENTERPRISE_MANAGER_DB_URI=mongodb://localhost:27017
 ENV 		MONGO_ENTERPRISE_MANAGER_ADMIN_EMAIL=noreply@rambler.ru
 ENV 		MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_URL=http://localhost:8080
 ENV 		MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_BACKUP_URL=http://localhost:8081
-ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS="-d64 -Xss256k -Xmx2048m -Xms2048m -XX:NewSize=300m -Xmn700m -XX:ReservedCodeCacheSize=64m -XX:-OmitStackTraceInFastThrow -Dxgen.webServerGzipEnabled=true"
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XSS=328k
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMX=4352m
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMS=4352m
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_NEW_SIZE=600m
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMN=1500m
+ENV 		MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_RESERVED_CODE_CACHE=128m
 
 COPY 		docker-entrypoint.sh 		/entrypoint.sh
-COPY 		config/supervisord.conf /etc/supervisor/conf.d/ops-manager.conf
 
 ENTRYPOINT 	[ "/entrypoint.sh" ]
 ENV   		 PATH=/opt/mongodb/mms/bin/:$PATH
 
 EXPOSE		8080 8081
 
-#CMD 		[ "mongodb-mms", "backup-daemon" ]
 CMD 		[ "mongodb-mms" ]
