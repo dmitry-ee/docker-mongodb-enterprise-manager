@@ -46,8 +46,8 @@ if [ "$1" = 'mongodb-mms' ]; then
 
   set_config mms.ignoreInitialUiSetup "true"
   set_config mongo.mongoUri "$MONGO_ENTERPRISE_MANAGER_DB_URI"
-  set_config mms.centralUrl "$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_URL"
-  set_config mms.backupCentralUrl "$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_BACKUP_URL"
+  set_config mms.centralUrl "http://localhost:$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_PORT"
+  set_config mms.backupCentralUrl "http://localhost:$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_BACKUP_PORT"
   set_config mms.adminEmailAddr "$MONGO_ENTERPRISE_MANAGER_ADMIN_EMAIL"
   # some initial configs, idk why they are mandatory
   # feel free to to remove hardcode here
@@ -72,6 +72,10 @@ if [ "$1" = 'mongodb-mms' ]; then
   set_java_opt xx:newsize= $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_NEW_SIZE
   set_java_opt xmn $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_XMN
   set_java_opt XX:ReservedCodeCacheSize= $MONGO_ENTERPRISE_MANAGER_JAVA_OPTS_RESERVED_CODE_CACHE
+
+  set_config BASE_PORT "$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_PORT"
+  #set_config LOG_PATH "$MONGO_ENTERPRISE_MANAGER_LOG_DIR"
+  #set_config ENC_KEY_PATH "$MONGO_ENTERPRISE_MANAGER_CERT_DIR/gen.key"
 
   cat "$config_tmp" > $MONGO_ENTERPRISE_MANAGER_CONF_DIR/mms.conf
   rm "$config_tmp"
