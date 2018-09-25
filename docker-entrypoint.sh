@@ -46,7 +46,11 @@ if [ "$1" = 'mongodb-mms' ]; then
 
   set_config mms.ignoreInitialUiSetup "true"
   set_config mongo.mongoUri "$MONGO_ENTERPRISE_MANAGER_DB_URI"
-  set_config mms.centralUrl "http://localhost:$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_PORT"
+  if [ -z "$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_URL" ]; then
+    set_config mms.centralUrl "$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_URL"
+  else
+    set_config mms.centralUrl "http://localhost:$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_MAIN_PORT"
+  fi
   set_config mms.backupCentralUrl "http://localhost:$MONGO_ENTERPRISE_MANAGER_BOOTSTRAP_BACKUP_PORT"
   set_config mms.adminEmailAddr "$MONGO_ENTERPRISE_MANAGER_ADMIN_EMAIL"
   # some initial configs, idk why they are mandatory
