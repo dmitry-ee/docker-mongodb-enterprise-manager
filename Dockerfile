@@ -67,6 +67,6 @@ COPY 		docker-entrypoint.sh 		/entrypoint.sh
 ENTRYPOINT 	[ "/entrypoint.sh" ]
 ENV   		 PATH=/opt/mongodb/mms/bin/:$PATH
 
-EXPOSE		9090 9091
+EXPOSE		7070 7071
 
 CMD 		[ "mongodb-mms" ]
