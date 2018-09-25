@@ -1,9 +1,9 @@
 FROM 		debian:jessie
 
-ENV 		MONGO_ENTERPRISE_MANAGER_USER=mongodb-mms
+ENV 		MONGO_ENTERPRISE_MANAGER_USER=mongoops
 
 # add our user and group first to make sure their IDs get assigned consistently, regardless of whatever dependencies get added
-RUN		groupadd -g 1999 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1999 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
+RUN		groupadd -g 1998 -r ${MONGO_ENTERPRISE_MANAGER_USER} && useradd  -u 1998 -r -g ${MONGO_ENTERPRISE_MANAGER_USER} ${MONGO_ENTERPRISE_MANAGER_USER}
 
 RUN 		set -x \
 		&& apt-get update \
@@ -46,7 +46,7 @@ RUN 		mkdir -p \
 
 VOLUME		${MONGO_ENTERPRISE_MANAGER_CONF_DIR} ${MONGO_ENTERPRISE_MANAGER_CERT_DIR} ${MONGO_ENTERPRISE_MANAGER_LOG_DIR}
 
-LABEL 		description="MongoDB Enterprise OpsManager (non-official) image with fixed uid for user(1999)"
+LABEL 		description="MongoDB Enterprise OpsManager (non-official) image with fixed uid for user(1998)"
 LABEL 		maintainer="Dmitry Evdokimov # devdokimoff@gmail.com / devdokimov@alfabank.ru #"
 
 # DEFAULT ENV VARS EXPOSED TO CONTAINER
